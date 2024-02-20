@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <h1 class="display-4">Control System</h1>
+        <div>
+            <label for="deviceNameInput">Create New Device:</label>
+            <input type="text" id="deviceNameInput" class="form-control" placeholder="Enter device name">
+            <button class="btn btn-primary mt-2" onclick="createDevice()">Create Device</button>
+        </div>
+        <div class="mt-4">
+            <label for="deviceSelect">Select Device:</label>
+            <select id="deviceSelect" class="form-control" onchange="controlDevice()">
+                <!-- Dynamically generated options for devices will go here -->
+            </select>
+        </div>
+        <!-- Additional controls or settings for the selected device can be added here -->
+        <div class="mt-4">
+            <label for="deviceTypeSelect">Select Device Type:</label>
+            <select id="deviceTypeSelect" class="form-control" onchange="updateDeviceControls()">
+                <div class="mt-4">
+                    <canvas id="chart"></canvas>
+                    <button id="toggleButton" class="btn btn-success" onclick="toggleDevice()">Toggle Device</button>
+                </div>                <option value="normal">Normal Button</option>
+                <!-- Add more device types as needed -->
+            </select>
+        </div>
+        
+        <div id="deviceControls" class="mt-4">
+
+            <!-- Device-specific controls will be dynamically added here -->
+        </div>
+
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <!-- Your custom JavaScript for device control -->
+    <script src="{{ url_for('static', filename='control_system.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <h1 class="display-4">Dashboard</h1>
+        <div>
+            <label for="endpointInput">Create New Endpoint:</label>
+            <input type="text" id="endpointInput" class="form-control" placeholder="Enter endpoint name">
+            <button class="btn btn-primary mt-2" onclick="createEndpoint()">Create Endpoint</button>
+        </div>
+        <div class="mt-4">
+            <label for="endpointSelect">Select Endpoint:</label>
+            <select id="endpointSelect" class="form-control" onchange="fetchAndUpdateData()">
+                <option value="temperature">Temperature</option>
+                <option value="humidity">Humidity</option>
+                <!-- Add dynamically generated options here -->
+            </select>
+        </div>
+        <div class="mt-4">
+            <canvas id="chart"></canvas>
+        </div>
+        <a class="btn btn-secondary mt-3" href="{{ url_for('home') }}">Go to Home Page</a>
+    </div>
+
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <!-- Include Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        function createEndpoint() {
+            const newEndpoint = $('#endpointInput').val();
+            if (newEndpoint) {
+                $.ajax({
+                    url: '/api/create_endpoint',
+                    method: 'POST',
+                    data: { new_endpoint: newEndpoint },
+                    success: function (response) {
+                        if (response.success) {
+                            // Add the new endpoint as an option in the select dropdown
+                            $('#endpointSelect').append(`<option value="${newEndpoint}">${newEndpoint}</option>`);
+                        }
+                    },
+                    error: function (error) {
+                        console.error('Error creating endpoint:', error);
+                    }
+                });
+            }
+        }
+
+        function fetchAndUpdateData() {
+            const selectedEndpoint = $('#endpointSelect').val();
+            $.ajax({
+                url: '/api/update_data',
+                method: 'POST',
+                data: { endpoint: selectedEndpoint, value: Math.random() * 100 },  // Simulating new data
+                success: function (response) {
+                    if (response.success) {
+                        // Fetch data for the selected endpoint and update the chart
+                        fetchChartData(selectedEndpoint);
+                    }
+                },
+                error: function (error) {
+                    console.error('Error updating data:', error);
+                }
+            });
+        }
+
+        function fetchChartData(endpoint) {
+            $.ajax({
+                url: '/api/data',
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    const chartData = {
+                        labels: ['1', '2', '3', '4', '5'],
+                        datasets: [{
+                            label: endpoint,
+                            data: data[endpoint],
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    };
+
+                    // Create or update the chart
+                    const ctx = document.getElementById('chart').getContext('2d');
+                    if (window.myChart) {
+                        window.myChart.data = chartData;
+                        window.myChart.update();
+                    } else {
+                        window.myChart = new Chart(ctx, {
+                            type: 'line',
+                            data: chartData,
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                    }
+                },
+                error: function (error) {
+                    console.error('Error fetching chart data:', error);
+                }
+            });
+        }
+
+        // Fetch initial chart data on page load
+        fetchChartData($('#endpointSelect').val());
+    </script>
+</body>
+</html>
