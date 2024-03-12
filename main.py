@@ -7,7 +7,7 @@ app.config['SECRET_KEY'] = 'your_secret_key'  # Change this to a secure secret k
 
 login_manager = LoginManager(app)
 
-# Sample User class, replace with your actual User model
+#   User class, replace with your actual User model
 class User(UserMixin):
     pass
 
@@ -51,7 +51,7 @@ def login():
         # if response.status_code == 304:
         #     user = User()
         #     user.id = username
-        #     login_user(user)
+        #     login_user(user) 
             return redirect(url_for('dashboard'))
 
 
@@ -103,8 +103,7 @@ def create_endpoint():
 def update_data():
     endpoint = request.form.get('endpoint')
     new_value = float(request.form.get('value'))
-    # Implement logic to update data for the specified endpoint
-    # For simplicity, we'll add the new value to the data list
+  
     device_data[endpoint].append(new_value)
     device_data[endpoint] = device_data[endpoint][-5:]  # Keep only the last 5 values
     return jsonify({'success': True})
@@ -112,4 +111,4 @@ def update_data():
 def control_system():
     return render_template('control_system.html')
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=4040)
