@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:bounce/bounce.dart';
 import 'package:get/get.dart';
+import 'package:iotdashnew/screen/apikey.dart';
+import 'package:iotdashnew/screen/controlSystem.dart';
 import 'package:iotdashnew/screen/graph.dart';
 import 'package:iotdashnew/screen/widgets/selection_bar_widget.dart';
 
@@ -8,7 +10,7 @@ class Home extends StatelessWidget {
   const Home({super.key});
 
   void generateApiKey() {
-    // Add logic for generating API key
+    Get.to(ApiKeyGeneration(), transition: Transition.cupertino);
   }
 
   void navigateToVisualization() {
@@ -17,7 +19,7 @@ class Home extends StatelessWidget {
   }
 
   void navigateToControlSystem() {
-    // Add logic for navigating to the control system screen
+    Get.to(ControlSystem(), transition: Transition.cupertino);
   }
 
   void navigateToSettings() {
@@ -35,6 +37,7 @@ class Home extends StatelessWidget {
         foregroundColor: Colors.white,
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           selectionbar(
             oncallback: () {
@@ -49,11 +52,15 @@ class Home extends StatelessWidget {
             text: 'Visualization',
           ),
           selectionbar(
-            oncallback: () {},
+            oncallback: () {
+              navigateToControlSystem();
+            },
             text: 'Control System',
           ),
           selectionbar(
-            oncallback: () {},
+            oncallback: () {
+              generateApiKey();
+            },
             text: 'Settings',
           )
         ],

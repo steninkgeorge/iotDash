@@ -93,10 +93,41 @@ class _GraphState extends State<Graph> {
                         margin: EdgeInsets.all(8),
                         child: 
                            LineChart(
-                            LineChartData(
-                              // ... your LineChartData properties
-                            ),
-                          )
+  LineChartData(
+    gridData: FlGridData(show: false),
+    titlesData: FlTitlesData(
+      show: true,
+      leftTitles:AxisTitles(axisNameWidget: Text('graph'))
+    ),
+    borderData: FlBorderData(
+      show: true,
+      border: Border.all(
+        color: const Color(0xff37434d),
+        width: 1,
+      ),
+    ),
+    minX: 0,
+    maxX: sensorDataList.length.toDouble() - 1,
+    minY: 20,
+    maxY: 35,
+    lineBarsData: [
+      LineChartBarData(
+        spots: List.generate(
+          sensorDataList.length,
+          (index) => FlSpot(
+            index.toDouble(),
+            sensorDataList[index]['temperature'],
+          ),
+        ),
+        isCurved: true,
+        color: Colors.blue,
+        dotData: FlDotData(show: false),
+        belowBarData: BarAreaData(show: false),
+      ),
+    ],
+  ),
+),
+
                       );
                     } else {
                       return Container(); // Return an empty container for extra grid items
